@@ -3,6 +3,8 @@
 ***************************************************************************************
 ENVIRONEMENT == NETBEANS IDE 16
 
+  **Juste une erreur sql que je dois régler, sinon tout marche RAS** thannnks
+
  - Cancel button not working yet
 
  - We have to use “ regex “ in Java (Kinda don’t understand)
