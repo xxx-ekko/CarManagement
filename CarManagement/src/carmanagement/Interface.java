@@ -5,6 +5,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
 import models.CarOwner;
 import models.CarType;
@@ -384,8 +386,9 @@ public class Interface extends javax.swing.JFrame {
             
 
             // pour tester vsi tous les champs sont vides ou pas
-            if (!testField(prenom_txt.getText(), nom_text.getText(), tel_text.getText(), CNI_txt.getText(), modele_txt.getText(), (String) Transmission_txt.getSelectedItem(), marque_txt.getText(), Matricule_txt.getText())) {
-                JOptionPane.showMessageDialog(this, "Veuillez remplir tous les champs");
+            String errorMessage = validate(prenom_txt.getText(), nom_text.getText(), tel_text.getText(), CNI_txt.getText(), modele_txt.getText(), (String) Transmission_txt.getSelectedItem(), marque_txt.getText(), Matricule_txt.getText());
+            if (errorMessage != null) {
+                JOptionPane.showMessageDialog(this, errorMessage);
                 return;
             }
 
@@ -521,15 +524,28 @@ public class Interface extends javax.swing.JFrame {
     }
     
 
-    private boolean testField(String matricule, String prenom, String nom, String tel, String cni, String modele, String transmission, String marque) {
-        return !(prenom.trim().isEmpty()
+    private String validate(String prenom, String nom, String tel, String cni, String modele, String transmission, String marque, String matricule) {
+        if ((prenom.trim().isEmpty()
                 || nom.trim().isEmpty()
                 || tel.trim().isEmpty()
                 || modele.trim().isEmpty()
                 || cni.trim().isEmpty()
                 || matricule.trim().isEmpty()
                 || transmission.trim().isEmpty()
-                || marque.trim().isEmpty());
+                || marque.trim().isEmpty())) {
+            return "Veuillez remplir tous les champs";
+        }
+        
+        String matriculeRegex = "^[A-Z]{2}-[0-9]{3}-[A-Z]{2}$";
+        Pattern matriculePattern = Pattern.compile(matriculeRegex);
+        Matcher matcher = matriculePattern.matcher(matricule);
+        
+        if (!matcher.matches()) {
+            return "Le format du matricule est invalide";
+        }
+
+
+        return null;
     }
 
     private void clearFied() {
