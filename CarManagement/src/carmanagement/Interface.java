@@ -305,7 +305,12 @@ public class Interface extends javax.swing.JFrame {
         });
         jScrollPane2.setViewportView(tableauAffichage);
 
-        genre_txt.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Male/Female", "Male", "Female", " " }));
+        genre_txt.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Male/Female", "Male", "Female", "" }));
+        genre_txt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                genre_txtActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -476,6 +481,10 @@ public class Interface extends javax.swing.JFrame {
         this.clearFied();
     }//GEN-LAST:event_CancelActionPerformed
 
+    private void genre_txtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_genre_txtActionPerformed
+        affichage();
+    }//GEN-LAST:event_genre_txtActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -514,8 +523,18 @@ public class Interface extends javax.swing.JFrame {
 
     private void affichage() {
         try {
-            String sql = "SELECT co.Cni,co.nom,co.prenom,co.tel,ct.marque,ct.annee from carowner co , cartype ct WHERE co.id_co=ct.id_co";
-            ResultSet rs = db.executeSelect(sql);
+            String genre = (String) genre_txt.getSelectedItem();
+            String genreLike = "%%";
+            if (genre.equals("Male")) {
+                genreLike = "1%";
+            } else if (genre.equals("Female")) {
+                genreLike = "2%";
+            }
+            
+            String sql = "SELECT co.Cni,co.nom,co.prenom,co.tel,ct.marque,ct.annee from carowner co , cartype ct WHERE co.id_co=ct.id_co AND co.Cni LIKE ?";
+            db.iniPreparedCmd(sql);
+            db.getPstmt().setString(1, genreLike);
+            ResultSet rs = db.executePreparedSelect();
             db.displayTable(rs, tableauAffichage);
             System.out.println(sql);
         } catch (Exception ex) {
@@ -534,6 +553,10 @@ public class Interface extends javax.swing.JFrame {
                 || transmission.trim().isEmpty()
                 || marque.trim().isEmpty())) {
             return "Veuillez remplir tous les champs";
+        }
+        
+        if (dateNaissance == null) {
+            return "Veuillez remplir la date de naissance";
         }
         
         long ageInMs = new Date().getTime() - dateNaissance.getTime();

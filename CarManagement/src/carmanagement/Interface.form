@@ -493,10 +493,13 @@
                 <StringItem index="0" value="Male/Female"/>
                 <StringItem index="1" value="Male"/>
                 <StringItem index="2" value="Female"/>
-                <StringItem index="3" value=" "/>
+                <StringItem index="3" value=""/>
               </StringArray>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="genre_txtActionPerformed"/>
+          </Events>
           <AuxValues>
             <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
           </AuxValues>
