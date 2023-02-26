@@ -386,7 +386,7 @@ public class Interface extends javax.swing.JFrame {
             
 
             // pour tester vsi tous les champs sont vides ou pas
-            String errorMessage = validate(prenom_txt.getText(), nom_text.getText(), tel_text.getText(), CNI_txt.getText(), modele_txt.getText(), (String) Transmission_txt.getSelectedItem(), marque_txt.getText(), Matricule_txt.getText());
+            String errorMessage = validate(prenom_txt.getText(), nom_text.getText(), tel_text.getText(), CNI_txt.getText(), modele_txt.getText(), (String) Transmission_txt.getSelectedItem(), marque_txt.getText(), Matricule_txt.getText(), DateNaissance_txt.getDate());
             if (errorMessage != null) {
                 JOptionPane.showMessageDialog(this, errorMessage);
                 return;
@@ -524,7 +524,7 @@ public class Interface extends javax.swing.JFrame {
     }
     
 
-    private String validate(String prenom, String nom, String tel, String cni, String modele, String transmission, String marque, String matricule) {
+    private String validate(String prenom, String nom, String tel, String cni, String modele, String transmission, String marque, String matricule, Date dateNaissance) {
         if ((prenom.trim().isEmpty()
                 || nom.trim().isEmpty()
                 || tel.trim().isEmpty()
@@ -535,6 +535,15 @@ public class Interface extends javax.swing.JFrame {
                 || marque.trim().isEmpty())) {
             return "Veuillez remplir tous les champs";
         }
+        
+        long ageInMs = new Date().getTime() - dateNaissance.getTime();
+        int maxAgeInYears = 20;
+        long maxAgeInMillis = maxAgeInYears * 365L * 24L * 60L * 60L * 1000L;
+        
+        if (ageInMs < maxAgeInMillis) {
+            return "Le propriétaire doit être âgé d'au moins 20 ans";
+        }
+
         
         String matriculeRegex = "^[A-Z]{2}-[0-9]{3}-[A-Z]{2}$";
         Pattern matriculePattern = Pattern.compile(matriculeRegex);
